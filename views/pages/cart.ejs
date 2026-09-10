@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= typeof pageTitle !=='undefined' ? pageTitle : 'Your Sweet Cart | CakerMaker' %>
+  </title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+    <div class="cart-page-wrapper">
+      <div class="container">
+        <div style="margin-bottom: 30px;">
+          <span class="section-tag">Checkout Counter</span>
+          <h1 style="font-size: 2.4rem;">Your Sweet Shopping Cart 🛒</h1>
+        </div>
+
+        <!-- Empty Cart View -->
+        <div id="emptyCartMsg" class="empty-cart-view" style="display: none;">
+          <div class="empty-cart-icon">🎂</div>
+          <h2 style="margin-bottom: 10px; color: var(--primary);">Your cart is currently empty!</h2>
+          <p style="color: var(--text-muted); margin-bottom: 24px;">Explore our handcrafted fresh cakes and add your
+            sweet favorites.</p>
+          <a href="/menu" class="btn-primary" style="display: inline-flex;">Browse Cake Menu &rarr;</a>
+        </div>
+
+        <!-- Cart Content Layout -->
+        <div id="cartContent" class="cart-layout" style="display: none;">
+          <!-- Items Table Card -->
+          <div class="cart-table-card">
+            <table class="cart-table">
+              <thead>
+                <tr>
+                  <th>Cake</th>
+                  <th>Details</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="cartItems">
+                <!-- Rendered dynamically by cart.js -->
+              </tbody>
+            </table>
+
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-color);">
+              <a href="/menu"
+                style="color: var(--coral); font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; gap: 6px;">
+                &larr; Add more cakes
+              </a>
+              <button type="button" onclick="clearCart()"
+                style="background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; text-decoration: underline;">
+                Clear entire cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Summary & Checkout Sidebar -->
+          <div class="cart-summary-card">
+            <h3>Order Summary</h3>
+
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span>₹<span id="cartSubtotal">0</span></span>
+            </div>
+
+            <div class="summary-row">
+              <span>Delivery Fee:</span>
+              <span id="deliveryFeeText" style="color: #16A34A; font-weight: 700;">FREE</span>
+            </div>
+
+            <div class="summary-row" id="discountRow" style="display: none; color: #16A34A;">
+              <span>Promo Discount (20%):</span>
+              <span>-₹<span id="discountAmount">0</span></span>
+            </div>
+
+            <!-- Promo Code Box -->
+            <div class="promo-box">
+              <input type="text" id="promoInput" class="promo-input" placeholder="Coupon (e.g. SWEET20)" />
+              <button type="button" class="btn-apply-promo" onclick="applyPromoCode()">Apply</button>
+            </div>
+            <div id="promoMessage"
+              style="font-size: 0.82rem; margin-top: -10px; margin-bottom: 14px; font-weight: 600;"></div>
+
+            <div class="summary-row total-row">
+              <span>Grand Total:</span>
+              <span>₹<span id="grandTotal">0</span></span>
+            </div>
+
+            <!-- Checkout Button Trigger -->
+            <button type="button" class="btn-checkout-trigger" onclick="openPaymentGatewayModal()">
+              <span>💳</span> Proceed to Payment Gateway
+            </button>
+
+            <!-- Amazon Link Banner -->
+            <div class="amazon-cart-banner">
+              <span>Prefer buying on Amazon?</span><br />
+              <a href="https://www.amazon.in/s?k=fresh+cakes+bakery" target="_blank" rel="noopener noreferrer">
+                🛍️ Shop Bakery Collection on Amazon India &rarr;
+              </a>
+            </div>
+
+            <!-- Customer Service Helpline Box in Cart -->
+            <div style="margin-top: 18px; padding: 14px; background: #FFF5EE; border: 1px solid #F3D9C8; border-radius: var(--radius-sm); font-size: 0.85rem;">
+              <div style="font-weight: 700; color: var(--primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <span>📞</span> Customer Care Helpline
+              </div>
+              <div style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 8px;">
+                Special flavor request or emergency delivery instructions?
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <a href="tel:1800225362" style="background: var(--coral); color: #FFF; padding: 6px 12px; border-radius: 4px; font-weight: 700; font-size: 0.78rem; text-decoration: none;">
+                  Call 1800-225-362
+                </a>
+                <a href="https://wa.me/919876543210?text=Hi%20CakerMaker%20Helpline,%20I%20have%20a%20question%20about%20my%20cart" target="_blank" rel="noopener noreferrer" style="background: #16A34A; color: #FFF; padding: 6px 12px; border-radius: 4px; font-weight: 700; font-size: 0.78rem; text-decoration: none;">
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Payment Gateway Modal -->
+    <div class="modal-backdrop" id="paymentModalBackdrop">
+      <div class="payment-modal-box">
+        <button class="modal-close-btn" onclick="closePaymentGatewayModal()">&times;</button>
+
+        <!-- Step 1: Payment Header -->
+        <div class="payment-header">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3>🍰 CakerMaker Secure Checkout</h3>
+              <p>256-Bit SSL Encrypted Payment Gateway</p>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 0.8rem; color: #F5D5C6;">Payable Amount</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: #FFFFFF;">₹<span id="payModalAmount">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Payment Body -->
+        <div class="payment-body" id="paymentModalBody">
+          <div id="checkoutFormSection">
+            <div class="checkout-step-title">
+              <span>📍</span> 1. Customer & Delivery Information
+            </div>
+
+            <div class="checkout-form-grid">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" id="custName" class="form-control" placeholder="Deepak Kumar" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number *</label>
+                <input type="tel" id="custPhone" class="form-control" placeholder="+91 98765 43210" required />
+              </div>
+              <div class="form-group full-col">
+                <label class="form-label">Email Address *</label>
+                <input type="email" id="custEmail" class="form-control" placeholder="deepak@example.com" required />
+              </div>
+              <div class="form-group full-col">
+                <label class="form-label">Delivery Address *</label>
+                <input type="text" id="custAddress" class="form-control" placeholder="House/Flat No., Street, Landmark"
+                  required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">City</label>
+                <input type="text" id="custCity" class="form-control" value="Kolkata" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Pincode</label>
+                <input type="text" id="custPincode" class="form-control" value="700001" />
+              </div>
+            </div>
+
+            <div class="checkout-step-title">
+              <span>💳</span> 2. Choose Payment Gateway
+            </div>
+
+            <!-- Payment Method Selector Tabs -->
+            <div class="payment-tabs">
+              <button type="button" class="pay-tab-btn active" onclick="switchPayTab('upi', this)">
+                <span>📱</span> UPI / QR
+              </button>
+              <button type="button" class="pay-tab-btn" onclick="switchPayTab('card', this)">
+                <span>💳</span> Cards
+              </button>
+              <button type="button" class="pay-tab-btn" onclick="switchPayTab('netbanking', this)">
+                <span>🏦</span> NetBanking
+              </button>
+              <button type="button" class="pay-tab-btn" onclick="switchPayTab('cod', this)">
+                <span>💵</span> COD
+              </button>
+            </div>
+
+            <!-- Tab Content: UPI -->
+            <div id="payTab-upi" class="pay-tab-content active">
+              <div class="qr-code-box">
+                <p style="font-size: 0.88rem; font-weight: 700; color: var(--primary);">Scan QR Code with any UPI App:
+                </p>
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=cakemaker@okaxis&pn=CakerMakerBakery"
+                  alt="UPI QR Code" class="qr-simulated-img" />
+                <div class="upi-logos">
+                  <span>Google Pay</span> &bull; <span>PhonePe</span> &bull; <span>Paytm</span> &bull; <span>BHIM</span>
+                </div>
+                <div
+                  style="font-size: 0.82rem; color: var(--text-muted); background: #FFF; padding: 6px 14px; border-radius: 4px; border: 1px dashed var(--border-color);">
+                  UPI ID: <strong>cakemaker@okaxis</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Content: Card -->
+            <div id="payTab-card" class="pay-tab-content">
+              <div class="checkout-form-grid" style="margin-bottom: 0;">
+                <div class="form-group full-col">
+                  <label class="form-label">Card Number</label>
+                  <input type="text" class="form-control"
+                    placeholder="4532 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 8921" maxlength="19" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Expiry Date</label>
+                  <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CVV / CVC</label>
+                  <input type="password" class="form-control" placeholder="123" maxlength="3" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Content: NetBanking -->
+            <div id="payTab-netbanking" class="pay-tab-content">
+              <label class="form-label">Select Popular Bank:</label>
+              <select class="form-control">
+                <option>HDFC Bank</option>
+                <option>State Bank of India (SBI)</option>
+                <option>ICICI Bank</option>
+                <option>Axis Bank</option>
+                <option>Kotak Mahindra Bank</option>
+              </select>
+            </div>
+
+            <!-- Tab Content: COD -->
+            <div id="payTab-cod" class="pay-tab-content">
+              <p style="font-size: 0.9rem; color: var(--text-muted); text-align: center; padding: 10px 0;">
+                💵 Pay with cash or UPI on delivery when our fresh cake arrives at your door.
+              </p>
+            </div>
+
+            <!-- Submit Order & Pay Button -->
+            <button type="button" class="btn-confirm-pay" id="btnConfirmPayment" onclick="processPaymentAndOrder()">
+              <span>🔒</span> Pay & Place Order (₹<span id="btnPayAmount">0</span>)
+            </button>
+          </div>
+
+          <!-- Success Receipt Section (Initially Hidden) -->
+          <div id="orderSuccessSection" class="order-success-screen" style="display: none;">
+            <div class="success-icon-badge">✓</div>
+            <h2 style="color: var(--primary); font-size: 1.8rem; margin-bottom: 8px;">Order Placed Successfully!</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              Thank you for ordering with CakerMaker! Our master bakers are already preparing your fresh cake.
+            </p>
+
+            <div class="order-id-badge" id="receiptOrderId">Order #CK-10928</div>
+
+            <div
+              style="background: var(--bg-page); border-radius: var(--radius-sm); padding: 18px; margin: 20px 0; text-align: left; font-size: 0.9rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: var(--text-muted);">Estimated Delivery:</span>
+                <strong style="color: #16A34A;">Within 2 Hours (Today)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: var(--text-muted);">Payment Status:</span>
+                <strong id="receiptPaymentStatus" style="color: var(--primary);">Paid (Verified)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: var(--text-muted);">Total Paid:</span>
+                <strong style="color: var(--coral); font-size: 1.1rem;">₹<span id="receiptTotalAmount">0</span></strong>
+              </div>
+            </div>
+
+            <!-- Live Track Button + Home Button -->
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px;">
+              <a id="trackOrderLiveBtn" href="/track" class="btn-primary" style="background: linear-gradient(135deg, #16A34A, #15803D); display: inline-flex; align-items: center; gap: 8px; font-weight: 800;">
+                <span>🚚</span> Live Track Delivery Agent
+              </a>
+              <a href="/" class="btn-secondary">Return to Home</a>
+              <button type="button" class="btn-secondary" onclick="window.print()">Print Receipt 🖨️</button>
+            </div>
+
+            <!-- 24/7 Helpline reminder -->
+            <div style="font-size: 0.82rem; color: var(--text-muted); text-align: center;">
+              Need help? 📞 Call Toll-Free Helpline: <a href="tel:1800225362" style="color: var(--coral); font-weight: 700;">1800-225-362</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+      <script src="/js/cart.js"></script>
+</body>
+
+</html>

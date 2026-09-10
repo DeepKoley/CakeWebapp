@@ -1,0 +1,699 @@
+/* =========================================================
+   CAKERMAKER - LIVE DELIVERY TRACKER & HELPLINE STYLING
+   ========================================================= */
+
+.track-page-header {
+  background: linear-gradient(135deg, #27120A 0%, #462215 60%, #6A3824 100%);
+  color: #FFFFFF;
+  padding: 44px 0 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+.track-page-header::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(217, 119, 6, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.track-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.track-header-title h1 {
+  color: #FFFFFF;
+  font-size: 2.3rem;
+  margin-bottom: 8px;
+}
+
+.track-header-title p {
+  color: #F5D5C6;
+  font-size: 1rem;
+}
+
+.order-search-box {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 6px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  max-width: 440px;
+}
+
+.order-search-input {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  width: 100%;
+  outline: none;
+}
+
+.order-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.order-search-btn {
+  background: var(--coral);
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.order-search-btn:hover {
+  background: #C2410C;
+  transform: translateY(-1px);
+}
+
+/* Tracking Layout Grid */
+.tracking-layout-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 32px;
+  padding: 40px 0 60px;
+}
+
+@media (max-width: 980px) {
+  .tracking-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card Common */
+.track-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+  transition: var(--transition);
+}
+
+.track-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.track-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* Live Simulation Map Radar */
+.live-map-card {
+  background: #18110D;
+  border-radius: var(--radius-md);
+  border: 1px solid #3C2216;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 24px;
+}
+
+.map-radar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(39, 18, 10, 0.95);
+  border-bottom: 1px solid #3C2216;
+  color: #FFFFFF;
+}
+
+.radar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(22, 163, 74, 0.2);
+  color: #4ADE80;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #4ADE80;
+  border-radius: 50%;
+  animation: radarPulse 1.6s infinite;
+}
+
+@keyframes radarPulse {
+  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+/* Visual Map Canvas / Container */
+.map-canvas-container {
+  height: 360px;
+  position: relative;
+  background: #150F0D;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  overflow: hidden;
+}
+
+/* SVG Route Canvas */
+.map-route-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.route-road {
+  stroke: #2E1911;
+  stroke-width: 10;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.route-active-line {
+  stroke: var(--coral);
+  stroke-width: 4;
+  stroke-dasharray: 8 6;
+  stroke-linecap: round;
+  fill: none;
+  animation: routeDash 1.2s linear infinite;
+}
+
+@keyframes routeDash {
+  to { stroke-dashoffset: -28; }
+}
+
+/* Pins on Map */
+.map-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.pin-bakery {
+  top: 25%;
+  left: 16%;
+}
+
+.pin-destination {
+  top: 75%;
+  left: 84%;
+}
+
+.pin-agent {
+  top: 50%;
+  left: 50%;
+  transition: all 1s ease-in-out;
+  z-index: 20;
+}
+
+.pin-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.pin-bakery .pin-icon {
+  background: #D97706;
+  border: 2px solid #FBBF24;
+}
+
+.pin-destination .pin-icon {
+  background: #16A34A;
+  border: 2px solid #86EFAC;
+}
+
+.pin-agent .pin-icon {
+  background: var(--coral);
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 20px rgba(224, 83, 60, 0.8);
+  animation: agentFloat 2s ease-in-out infinite;
+}
+
+@keyframes agentFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.pin-pulse-ring {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid rgba(224, 83, 60, 0.6);
+  animation: ringExpand 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes ringExpand {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.pin-label {
+  margin-top: 6px;
+  background: rgba(18, 12, 10, 0.88);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
+}
+
+/* Map HUD Telemetry */
+.map-telemetry-hud {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 16px 20px;
+  background: #1E120D;
+  border-top: 1px solid #3C2216;
+}
+
+@media (max-width: 600px) {
+  .map-telemetry-hud {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.hud-item {
+  text-align: center;
+}
+
+.hud-label {
+  font-size: 0.72rem;
+  color: #A89286;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.hud-value {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.hud-value.highlight {
+  color: #F59E0B;
+}
+
+.hud-value.temp {
+  color: #38BDF8;
+}
+
+/* Delivery Agent Profile Card */
+.delivery-agent-card {
+  background: linear-gradient(145deg, #FFFFFF 0%, #FAF4F0 100%);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.agent-profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.agent-avatar-wrap {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  flex-shrink: 0;
+}
+
+.agent-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+}
+
+.agent-badge-shield {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #16A34A;
+  color: #FFFFFF;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  border: 2px solid #FFFFFF;
+}
+
+.agent-info h3 {
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.agent-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.agent-stars {
+  color: #D97706;
+  font-weight: 700;
+}
+
+.agent-vehicle-box {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-size: 0.88rem;
+}
+
+.vehicle-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.vehicle-number {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.agent-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn-agent-call {
+  background: #16A34A;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-agent-call:hover {
+  background: #15803D;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.btn-agent-whatsapp {
+  background: #25D366;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-agent-whatsapp:hover {
+  background: #1EBE5D;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* Order Progress Stepper */
+.progress-stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  padding-left: 10px;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+}
+
+.step-item::before {
+  content: '';
+  position: absolute;
+  top: 30px;
+  left: 15px;
+  width: 2px;
+  height: calc(100% + 4px);
+  background: var(--border-color);
+  z-index: 1;
+}
+
+.step-item:last-child::before {
+  display: none;
+}
+
+.step-item.completed::before {
+  background: #16A34A;
+}
+
+.step-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-page);
+  border: 2px solid var(--border-color);
+  color: var(--text-light);
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.step-item.completed .step-icon-wrap {
+  background: #16A34A;
+  border-color: #16A34A;
+  color: #FFFFFF;
+}
+
+.step-item.active .step-icon-wrap {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #FFFFFF;
+  box-shadow: 0 0 0 4px var(--coral-soft);
+  animation: pulseActive 1.6s infinite;
+}
+
+@keyframes pulseActive {
+  0% { box-shadow: 0 0 0 0 rgba(224, 83, 60, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(224, 83, 60, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(224, 83, 60, 0); }
+}
+
+.step-content h4 {
+  font-size: 0.98rem;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+.step-content p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.step-time {
+  font-size: 0.75rem;
+  color: #D97706;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   CUSTOMER SERVICE HELPLINE SECTION
+   ========================================================= */
+.helpline-card {
+  background: linear-gradient(135deg, #FFFDFB 0%, #FFF5ED 100%);
+  border: 1px solid #F3D9C8;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.helpline-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.helpline-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--coral-soft);
+  color: var(--coral);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.helpline-card-header h3 {
+  font-size: 1.2rem;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+.helpline-card-header p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.helpline-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+@media (max-width: 540px) {
+  .helpline-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.helpline-channel-box {
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: var(--transition);
+}
+
+.helpline-channel-box:hover {
+  border-color: var(--coral);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.channel-icon {
+  font-size: 1.5rem;
+}
+
+.channel-title {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.channel-number {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.channel-timing {
+  font-size: 0.72rem;
+  color: #16A34A;
+  font-weight: 600;
+}
+
+/* Order Details Overview */
+.order-overview-items {
+  border-top: 1px solid var(--border-light);
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.overview-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.overview-total-box {
+  background: var(--bg-page);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 800;
+  color: var(--primary);
+  margin-top: 12px;
+}

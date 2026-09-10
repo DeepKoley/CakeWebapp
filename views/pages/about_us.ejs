@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= typeof pageTitle !=='undefined' ? pageTitle : 'About Us | CakerMaker Story' %>
+  </title>
+  <link rel="stylesheet" href="/css/about_us.css" />
+</head>
+
+<body>
+  <%- include("../partials/header") %>
+
+    <!-- About Hero -->
+    <section class="about-hero">
+      <div class="container">
+        <span class="section-tag">Our Heritage & Craft</span>
+        <h1>Handcrafted Passion In Every Layer 🎂</h1>
+        <p>
+          Founded with a love for authentic artisan baking, CakerMaker combines time-honored French patisserie
+          techniques with exotic Indian flavors to create unforgettable sweet celebrations.
+        </p>
+      </div>
+    </section>
+
+    <!-- Story & Video Section -->
+    <section class="about-story-section">
+      <div class="container about-story-grid">
+        <div class="about-video-card">
+          <video src="/Videos/Cakes.mp4" autoplay muted loop playsinline controls></video>
+        </div>
+
+        <div class="about-story-text">
+          <h2>Baked with Love & Precision</h2>
+          <p>
+            Every cake at CakerMaker begins with a commitment to zero compromises: 100% pure dairy butter, premium
+            single-origin Belgian cocoa, organic vanilla beans, and real farm-picked berries.
+          </p>
+          <p>
+            Unlike commercial bakeries that store premade sponges for days, we bake <strong>strictly on order</strong>.
+            When you confirm your order, our master pastry chefs start whisking your cake to guarantee mouthwatering
+            freshness and moistness.
+          </p>
+          <div style="display: flex; gap: 20px; margin-top: 24px;">
+            <a href="/menu" class="btn-primary">Browse Fresh Cakes &rarr;</a>
+            <a href="/gallery" class="btn-secondary">View Infinite Gallery</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4-Step Process Section -->
+    <section class="process-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">How It Works</span>
+          <h2>How We Bake Fresh Everyday</h2>
+          <p>From your click to your doorstep within 2 hours.</p>
+        </div>
+
+        <div class="process-grid">
+          <div class="process-card">
+            <div class="step-number">1</div>
+            <h3>Fresh Order</h3>
+            <p>We receive your customized specifications (weight, eggless choice, personalized message) and prep fresh
+              batter.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="step-number">2</div>
+            <h3>Organic Ingredients</h3>
+            <p>Hand-selected pure butter, farm berries, and rich cocoa whisked to airy, melt-in-the-mouth perfection.
+            </p>
+          </div>
+
+          <div class="process-card">
+            <div class="step-number">3</div>
+            <h3>Artisan Sculpting</h3>
+            <p>Our pastry chefs hand-frost and pipe your custom message with surgical precision and edible gold or fruit
+              accents.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="step-number">4</div>
+            <h3>Express Safe Delivery</h3>
+            <p>Temperature-controlled shockproof packaging dispatched right to your doorstep within 120 minutes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand Stats Section -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item-box">
+            <div class="stat-number">12,500+</div>
+            <div class="stat-label">Cakes Delivered</div>
+          </div>
+          <div class="stat-item-box">
+            <div class="stat-number">4.9 ★</div>
+            <div class="stat-label">Customer Rating</div>
+          </div>
+          <div class="stat-item-box">
+            <div class="stat-number">88%</div>
+            <div class="stat-label">Repeat Customers</div>
+          </div>
+          <div class="stat-item-box">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Eggless Options</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customer Reviews -->
+    <section class="reviews-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Community Love</span>
+          <h2>What Our Cake Lovers Say 💬</h2>
+          <p>Real stories and celebrations from our valued customers.</p>
+        </div>
+
+        <div class="reviews-carousel-wrapper">
+          <div class="review-slide" id="activeReviewSlide">
+            <div class="review-stars">⭐⭐⭐⭐⭐</div>
+            <p class="review-quote" id="reviewQuoteText">
+              "The chocolate truffle cake for my birthday was unbelievably fresh and moist. Arrived right on time and
+              was loved by all my guests!"
+            </p>
+            <div class="reviewer-meta">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop"
+                alt="Rahul" class="reviewer-avatar" id="reviewAvatar" />
+              <div>
+                <strong class="reviewer-name" id="reviewAuthorName">Rahul Banerjee</strong>
+                <span class="reviewer-tag" id="reviewRoleTag">Verified Buyer &bull; Classic Chocolate Truffle</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-nav-btns">
+            <button type="button" class="car-btn" onclick="prevAboutReview()"
+              aria-label="Previous review">&#10094;</button>
+            <button type="button" class="car-btn" onclick="nextAboutReview()" aria-label="Next review">&#10095;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Got Questions?</span>
+          <h2>Frequently Asked Questions</h2>
+          <p>Everything you need to know about placing your order.</p>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item active" onclick="toggleFaq(this)">
+            <div class="faq-question">How far in advance should I place my order?</div>
+            <div class="faq-answer">
+              We offer 2-hour express delivery for classic menu cakes! For elaborate designer tiers or wedding cakes, we
+              recommend placing orders at least 24 to 48 hours in advance.
+            </div>
+          </div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Are all cakes available in 100% eggless / vegetarian options?</div>
+            <div class="faq-answer">
+              Yes! 100% of our cake flavors can be prepared in a dedicated vegetarian bakery station with certified
+              eggless recipes without compromising fluffiness or flavor.
+            </div>
+          </div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Can I write a personalized message on the cake?</div>
+            <div class="faq-answer">
+              Absolutely! When clicking "Quick View & Customize" or adding to cart, simply type your birthday or
+              anniversary message (up to 40 characters) and our chefs will pipe it beautifully for free.
+            </div>
+          </div>
+
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Do you deliver safely without melting or damage?</div>
+            <div class="faq-answer">
+              We use custom shockproof, food-grade thermal cake boxes with cooling gel packs to guarantee your cake
+              arrives in pristine, chilled condition.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <%- include("../partials/footer") %>
+
+      <script src="/js/about_us.js"></script>
+</body>
+
+</html>

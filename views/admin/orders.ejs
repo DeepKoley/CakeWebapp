@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Orders | CakerMaker Admin</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>🍰 CakerAdmin</h2>
+      <ul>
+        <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+        <li><a href="/admin/orders" class="active">📦 Customer Orders</a></li>
+        <li><a href="/admin/add-cake">➕ Add New Cake</a></li>
+        <li><a href="/admin/manage-cake">🍰 Manage Cakes</a></li>
+        <li><a href="/" target="_blank">🌐 View Live Shop</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <h1>Customer Orders Management</h1>
+        <a href="/admin/dashboard" class="btn-action">&larr; Back to Dashboard</a>
+      </header>
+
+      <section class="admin-card-box">
+        <h2>All Placed Orders (<%= orders ? orders.length : 0 %>)</h2>
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Info</th>
+              <th>Items</th>
+              <th>Message on Cake</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Update Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (orders && orders.length > 0) { %>
+              <% orders.forEach(order => { %>
+                <tr>
+                  <td><strong>#<%= order.orderId %></strong></td>
+                  <td>
+                    <div><strong><%= order.customer ? order.customer.name : 'Customer' %></strong></div>
+                    <div style="font-size: 0.8rem; color: var(--admin-muted);"><%= order.customer ? order.customer.phone : '' %></div>
+                    <div style="font-size: 0.78rem; color: var(--admin-muted);"><%= order.customer ? order.customer.address : '' %></div>
+                  </td>
+                  <td>
+                    <% if (order.items && order.items.length > 0) { %>
+                      <% order.items.forEach(item => { %>
+                        <div style="font-size: 0.85rem;">
+                          &bull; <%= item.name %> x<%= item.quantity %> (₹<%= item.price %>)
+                        </div>
+                      <% }); %>
+                    <% } else { %>
+                      -
+                    <% } %>
+                  </td>
+                  <td>
+                    <em style="color: var(--admin-accent); font-size: 0.85rem;">
+                      <%= order.customer && order.customer.cakeMessage ? order.customer.cakeMessage : 'None' %>
+                    </em>
+                  </td>
+                  <td><strong>₹<%= order.totalAmount %></strong></td>
+                  <td>
+                    <span class="badge <%= order.paymentStatus === 'Paid' ? 'delivered' : 'pending' %>">
+                      <%= order.paymentStatus %> (<%= order.paymentMethod %>)
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge <%= order.orderStatus === 'Delivered' ? 'delivered' : (order.orderStatus === 'Baking' ? 'baking' : 'pending') %>">
+                      <%= order.orderStatus %>
+                    </span>
+                  </td>
+                  <td>
+                    <form action="/admin/orders/<%= order._id %>/status" method="POST" style="display: flex; gap: 6px;">
+                      <select name="status" style="padding: 4px 8px; border-radius: 4px; font-size: 0.82rem; border: 1px solid var(--admin-border);">
+                        <option value="Pending" <%= order.orderStatus === 'Pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="Baking" <%= order.orderStatus === 'Baking' ? 'selected' : '' %>>Baking</option>
+                        <option value="Out for Delivery" <%= order.orderStatus === 'Out for Delivery' ? 'selected' : '' %>>Out for Delivery</option>
+                        <option value="Delivered" <%= order.orderStatus === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                      </select>
+                      <button type="submit" class="btn-view" style="padding: 4px 8px;">Save</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--admin-muted); padding: 30px;">
+                  No orders yet! As soon as customers checkout on the cart page, orders will be tracked here.
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= product.name %> | CakerMaker
+  </title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .product-detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 50px;
+      padding: 50px 0;
+      align-items: start;
+    }
+
+    .detail-img-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .detail-img-card img {
+      width: 100%;
+      height: 440px;
+      object-fit: cover;
+    }
+
+    @media (max-width: 900px) {
+      .product-detail-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-img-card img {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+    <div class="container">
+      <div style="padding-top: 24px;">
+        <a href="/menu" style="color: var(--text-muted); font-size: 0.9rem;">&larr; Back to Cake Menu</a>
+      </div>
+
+      <div class="product-detail-layout">
+        <!-- Product Image -->
+        <div class="detail-img-card">
+          <img src="<%= product.image %>" alt="<%= product.name %>" id="detailMainImg" />
+        </div>
+
+        <!-- Product Info -->
+        <div>
+          <span class="cake-category" style="font-size: 0.85rem;">
+            <%= product.category %>
+          </span>
+          <h1 style="font-size: 2.5rem; margin: 8px 0 12px;">
+            <%= product.name %>
+          </h1>
+
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+            <span style="color: var(--gold); font-weight: 700;">⭐⭐⭐⭐⭐ (<%= product.rating %> / 5)</span>
+            <span style="color: var(--text-light);">&bull;</span>
+            <span style="color: var(--text-muted);">
+              <%= product.reviewsCount %> verified foodie reviews
+            </span>
+            <span class="badge-veg">🌱 100% Eggless Option</span>
+          </div>
+
+          <div class="popup-price-box" style="margin-bottom: 24px;">
+            <span class="popup-price" id="detailDisplayPrice">₹<%= product.discountPrice || product.price %></span>
+            <% if (product.discountPrice && product.discountPrice < product.price) { %>
+              <span class="original-price" style="font-size: 1.1rem;">₹<%= product.price %></span>
+              <span class="discount-tag">
+                <%= Math.round(((product.price - product.discountPrice) / product.price) * 100) %>% OFF
+              </span>
+              <% } %>
+          </div>
+
+          <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 28px;">
+            <%= product.description %>
+          </p>
+
+          <!-- Weight Selection -->
+          <div class="popup-option-label">Select Weight:</div>
+          <div class="weight-selector" id="detailWeightSelector">
+            <button type="button" class="weight-chip" data-multiplier="0.8" data-weight="0.5 kg"
+              onclick="selectDetailWeight(this, <%= product.discountPrice || product.price %>)">0.5 kg</button>
+            <button type="button" class="weight-chip active" data-multiplier="1.0" data-weight="1 kg"
+              onclick="selectDetailWeight(this, <%= product.discountPrice || product.price %>)">1 kg</button>
+            <button type="button" class="weight-chip" data-multiplier="1.8" data-weight="2 kg"
+              onclick="selectDetailWeight(this, <%= product.discountPrice || product.price %>)">2 kg</button>
+          </div>
+
+          <!-- Custom Message -->
+          <div class="popup-option-label">Free Personalized Message on Cake:</div>
+          <input type="text" id="detailCakeMsg" class="cake-msg-input" placeholder="e.g. Happy Birthday Deepak! 🎉"
+            maxlength="40" />
+
+          <!-- Quantity -->
+          <div class="popup-qty-row">
+            <div class="popup-option-label" style="margin-bottom: 0;">Quantity:</div>
+            <div class="qty-control">
+              <button type="button" class="qty-btn" onclick="adjustDetailQty(-1)">−</button>
+              <span class="qty-number" id="detailQtyNum">1</span>
+              <button type="button" class="qty-btn" onclick="adjustDetailQty(1)">+</button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="popup-actions-grid" style="margin-bottom: 30px;">
+            <button type="button" class="btn-popup-add"
+              onclick="addDetailCakeToCart('<%= product._id %>', '<%= product.name.replace(/'/g, " \\'") %>', <%=
+                product.discountPrice || product.price %>, '<%= product.image %>')">
+                  <span>🛒</span> Add to Cart
+            </button>
+            <a href="<%= product.amazonUrl %>" target="_blank" rel="noopener noreferrer" class="btn-popup-amazon"
+              title="Purchase on Amazon">
+              <span>🛍️</span> Buy on Amazon
+            </a>
+          </div>
+
+          <!-- Trust Highlights -->
+          <div
+            style="background: var(--bg-page); border-radius: var(--radius-sm); padding: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem; color: var(--text-muted);">
+            <div>⚡ 2-Hour Express Delivery</div>
+            <div>🌱 Pure Vegetarian Station</div>
+            <div>❄️ Chilled Thermal Packaging</div>
+            <div>🍫 100% Belgian Cocoa</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Cakes -->
+      <% if (relatedProducts && relatedProducts.length> 0) { %>
+        <div style="margin-top: 60px; margin-bottom: 60px;">
+          <h2 style="font-size: 1.8rem; margin-bottom: 24px;">You May Also Love 🍰</h2>
+          <div class="cake-grid">
+            <% relatedProducts.forEach(rel=> { %>
+              <div class="cake-card">
+                <div class="cake-image-container">
+                  <img src="<%= rel.image %>" alt="<%= rel.name %>" />
+                  <button type="button" class="quick-view-overlay-btn"
+                    onclick="openCakeModalFromData(this.closest('.cake-card'))">
+                    <span>👁️</span> Quick View
+                  </button>
+                </div>
+                <div class="cake-card-body">
+                  <span class="cake-category">
+                    <%= rel.category %>
+                  </span>
+                  <h3 class="cake-title"><a href="/product/<%= rel._id %>">
+                      <%= rel.name %>
+                    </a></h3>
+                  <div class="cake-price-row">
+                    <span class="current-price">₹<%= rel.discountPrice || rel.price %></span>
+                  </div>
+                  <div class="cake-actions-row">
+                    <button type="button" class="btn-card-cart"
+                      onclick="quickAddToCart('<%= rel._id %>', '<%= rel.name.replace(/'/g, " \\'") %>', <%=
+                        rel.discountPrice || rel.price %>, '<%= rel.image %>')">
+                          Add
+                    </button>
+                    <a href="<%= rel.amazonUrl %>" target="_blank" class="btn-card-amazon">Amazon</a>
+                  </div>
+                </div>
+              </div>
+              <% }); %>
+          </div>
+        </div>
+        <% } %>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+      <script>
+        let currentDetailMultiplier = 1.0;
+        let currentDetailWeight = '1 kg';
+        let currentDetailBasePrice = <%= product.discountPrice || product.price %>;
+
+        function selectDetailWeight(btn, basePrice) {
+          document.querySelectorAll('#detailWeightSelector .weight-chip').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          currentDetailMultiplier = parseFloat(btn.dataset.multiplier);
+          currentDetailWeight = btn.dataset.weight;
+          const updatedPrice = Math.round(basePrice * currentDetailMultiplier);
+          document.getElementById('detailDisplayPrice').innerText = '₹' + updatedPrice;
+        }
+
+        function adjustDetailQty(delta) {
+          const qtyElem = document.getElementById('detailQtyNum');
+          let current = parseInt(qtyElem.innerText) || 1;
+          current += delta;
+          if (current < 1) current = 1;
+          qtyElem.innerText = current;
+        }
+
+        function addDetailCakeToCart(id, name, basePrice, image) {
+          const qty = parseInt(document.getElementById('detailQtyNum').innerText) || 1;
+          const finalPrice = Math.round(basePrice * currentDetailMultiplier);
+          const msg = document.getElementById('detailCakeMsg').value.trim();
+
+          let cart = JSON.parse(localStorage.getItem('cakeCart')) || [];
+          const itemKey = `${id}_${currentDetailWeight}_${msg}`;
+          const existingIdx = cart.findIndex(item => item.itemKey === itemKey);
+
+          if (existingIdx > -1) {
+            cart[existingIdx].quantity += qty;
+          } else {
+            cart.push({
+              id,
+              itemKey,
+              name: `${name} (${currentDetailWeight})`,
+              price: finalPrice,
+              image,
+              quantity: qty,
+              weight: currentDetailWeight,
+              cakeMessage: msg
+            });
+          }
+
+          localStorage.setItem('cakeCart', JSON.stringify(cart));
+          if (typeof updateCartCount === 'function') updateCartCount();
+          if (typeof showToastNotification === 'function') {
+            showToastNotification(`${name} (${currentDetailWeight})`, image);
+          } else {
+            alert(`${name} added to your cart! 🍰`);
+          }
+        }
+      </script>
+</body>
+
+</html>

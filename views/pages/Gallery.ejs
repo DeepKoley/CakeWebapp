@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= typeof pageTitle !=='undefined' ? pageTitle : 'Artisan Cake Gallery | Infinite Showcase' %>
+  </title>
+  <link rel="stylesheet" href="/css/gallery.css" />
+</head>
+
+<body>
+  <%- include("../partials/header") %>
+
+    <!-- Gallery Header -->
+    <section class="gallery-page-hero">
+      <div class="container">
+        <span class="section-tag">Infinite Image Showcase</span>
+        <h1>Artisan Bakery Gallery 🖼️</h1>
+        <p>
+          Explore endless handcrafted cakes! Search dynamically by keyword or scroll endlessly as fresh cakes load in
+          real-time from our oven.
+        </p>
+      </div>
+    </section>
+
+    <!-- Live Search & Category Filter Controls -->
+    <section class="container gallery-filter-wrap">
+      <div class="filter-wrapper">
+        <div class="search-sort-bar">
+          <div class="search-input-box">
+            <span class="search-icon-inside">🔍</span>
+            <input type="text" id="gallerySearchInput"
+              placeholder="Search infinite cake photos (e.g. Chocolate, Blueberry, Rasmalai, Velvet)..." />
+          </div>
+        </div>
+
+        <div class="category-pills" id="galleryFilterTags">
+          <button type="button" class="pill-btn active" onclick="filterGalleryCategory(this, 'all')">All
+            Flavors</button>
+          <button type="button" class="pill-btn" onclick="filterGalleryCategory(this, 'Chocolate')">🍫
+            Chocolate</button>
+          <button type="button" class="pill-btn" onclick="filterGalleryCategory(this, 'Red Velvet')">❤️ Red
+            Velvet</button>
+          <button type="button" class="pill-btn" onclick="filterGalleryCategory(this, 'Berry & Fruit')">🫐 Berry &
+            Fruits</button>
+          <button type="button" class="pill-btn" onclick="filterGalleryCategory(this, 'Fusion & Rasmalai')">👑 Rasmalai
+            Fusion</button>
+          <button type="button" class="pill-btn" onclick="filterGalleryCategory(this, 'Vanilla')">🍦 Vanilla</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Infinite Cake Gallery Grid -->
+    <section class="container">
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- Dynamic cards rendered here by gallery.js via /api/gallery/cakes -->
+      </div>
+
+      <!-- Infinite Scroll Loading Spinner Indicator -->
+      <div id="galleryLoader" class="infinite-scroll-loader">
+        <div class="spinner-circle"></div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 600;">Loading fresh cake images from our
+          kitchen...</p>
+      </div>
+
+      <div id="galleryEndMessage" class="infinite-end-msg" style="display: none;">
+        ✨ You have viewed all cakes in this category! Craving something custom? <a href="/about"
+          style="color: var(--coral); font-weight: 700; text-decoration: underline;">Contact our head chef</a>.
+      </div>
+    </section>
+
+    <%- include("../partials/footer") %>
+
+      <script src="/js/gallery.js"></script>
+</body>
+
+</html>

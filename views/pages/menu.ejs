@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    <%= typeof pageTitle !=='undefined' ? pageTitle : 'Artisanal Cake Menu | CakerMaker' %>
+  </title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+    <!-- Menu Banner -->
+    <section
+      style="text-align: center; padding: 50px 20px 30px; background: radial-gradient(circle at 50% 0%, #FFF2E6 0%, var(--bg-page) 80%);">
+      <div class="container">
+        <span class="section-tag">Fresh From The Oven</span>
+        <h1 style="font-size: 2.8rem; margin-bottom: 12px;">Our Artisanal Cake Menu 🍰</h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+          Filter by your favorite flavor, search for custom favorites, or click any cake to customize weight and
+          personal greeting!
+        </p>
+      </div>
+    </section>
+
+    <!-- Filter & Search Controls -->
+    <section class="container" style="margin-bottom: 40px;">
+      <div class="filter-wrapper">
+        <div class="search-sort-bar">
+          <div class="search-input-box">
+            <span class="search-icon-inside">🔍</span>
+            <input type="text" id="menuSearchInput" placeholder="Search by flavor, ingredient, or celebration..."
+              oninput="handleMenuSearch()" />
+          </div>
+
+          <select id="menuSortSelect" class="sort-select" onchange="handleMenuSort()">
+            <option value="featured">Featured & Bestsellers</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+
+        <div class="category-pills" id="categoryPillList">
+          <button type="button" class="pill-btn active" data-category="all" onclick="selectMenuCategory(this, 'all')">
+            All Cakes (<%= products ? products.length : 0 %>)
+          </button>
+          <button type="button" class="pill-btn" data-category="Chocolate"
+            onclick="selectMenuCategory(this, 'Chocolate')">
+            🍫 Chocolate
+          </button>
+          <button type="button" class="pill-btn" data-category="Red Velvet"
+            onclick="selectMenuCategory(this, 'Red Velvet')">
+            ❤️ Red Velvet
+          </button>
+          <button type="button" class="pill-btn" data-category="Fusion & Rasmalai"
+            onclick="selectMenuCategory(this, 'Fusion & Rasmalai')">
+            👑 Rasmalai & Fusion
+          </button>
+          <button type="button" class="pill-btn" data-category="Berry & Fruit"
+            onclick="selectMenuCategory(this, 'Berry & Fruit')">
+            🫐 Blueberry & Fruits
+          </button>
+          <button type="button" class="pill-btn" data-category="Vanilla" onclick="selectMenuCategory(this, 'Vanilla')">
+            🍦 Madagascar Vanilla
+          </button>
+          <button type="button" class="pill-btn" data-category="Designer & Custom"
+            onclick="selectMenuCategory(this, 'Designer & Custom')">
+            🎂 Designer & Wedding
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Result Count -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div id="resultCount" style="font-size: 0.95rem; font-weight: 700; color: var(--text-muted);">
+          Showing all <%= products ? products.length : 0 %> handcrafted cakes
+        </div>
+        <div style="font-size: 0.85rem; color: #16A34A; font-weight: 700;">
+          🌱 All cakes baked with 100% vegetarian / eggless options
+        </div>
+      </div>
+
+      <!-- Dynamic Cake Grid -->
+      <div class="cake-grid" id="menuCakeGrid">
+        <% if (products && products.length> 0) { %>
+          <% products.forEach(cake=> { %>
+            <div class="cake-card" data-id="<%= cake._id %>" data-name="<%= cake.name %>"
+              data-category="<%= cake.category %>" data-price="<%= cake.discountPrice || cake.price %>"
+              data-original-price="<%= cake.price %>" data-image="<%= cake.image %>" data-desc="<%= cake.description %>"
+              data-rating="<%= cake.rating %>" data-amazon="<%= cake.amazonUrl %>" data-eggless="<%= cake.isEggless %>"
+              data-tags="<%= (cake.tags || []).join(' ') %>">
+              <div class="cake-image-container">
+                <img src="<%= cake.image %>" alt="<%= cake.name %>" loading="lazy" />
+                <div class="cake-badges">
+                  <% if (cake.isEggless) { %>
+                    <span class="badge-veg">🌱 100% Eggless</span>
+                    <% } %>
+                      <% if (cake.isBestSeller) { %>
+                        <span class="badge-bestseller">🔥 Bestseller</span>
+                        <% } %>
+                </div>
+                <!-- Quick View Popup Box Trigger Button ("ADD POP up box ner cake add") -->
+                <button type="button" class="quick-view-overlay-btn"
+                  onclick="openCakeModalFromData(this.closest('.cake-card'))"
+                  title="Customize weight, message, and flavor">
+                  <span>👁️</span> Quick View & Customize
+                </button>
+              </div>
+
+              <div class="cake-card-body">
+                <div class="cake-meta">
+                  <span class="cake-category">
+                    <%= cake.category %>
+                  </span>
+                  <span class="cake-rating">⭐ <%= cake.rating %> (<%= cake.reviewsCount %>)</span>
+                </div>
+
+                <h3 class="cake-title">
+                  <a href="/product/<%= cake._id %>">
+                    <%= cake.name %>
+                  </a>
+                </h3>
+
+                <p class="cake-desc-snippet">
+                  <%= cake.description %>
+                </p>
+
+                <div class="cake-price-row">
+                  <span class="current-price">₹<%= cake.discountPrice || cake.price %></span>
+                  <% if (cake.discountPrice && cake.discountPrice < cake.price) { %>
+                    <span class="original-price">₹<%= cake.price %></span>
+                    <span class="discount-tag">
+                      <%= Math.round(((cake.price - cake.discountPrice) / cake.price) * 100) %>% OFF
+                    </span>
+                    <% } %>
+                </div>
+
+                <div class="cake-actions-row">
+                  <button type="button" class="btn-card-cart"
+                    onclick="openCakeModalFromData(this.closest('.cake-card'))" title="Customize and Add to Cart">
+                    <span>🛒</span> Add to Cart
+                  </button>
+                  <a href="<%= cake.amazonUrl %>" target="_blank" rel="noopener noreferrer" class="btn-card-amazon"
+                    title="Buy directly on Amazon India">
+                    <span>🛍️</span> Amazon
+                  </a>
+                </div>
+              </div>
+            </div>
+            <% }); %>
+              <% } else { %>
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                  <p style="font-size: 1.2rem; color: var(--text-muted);">No cakes found matching your search!</p>
+                </div>
+                <% } %>
+      </div>
+    </section>
+
+    <%- include('../partials/footer') %>
+
+      <script src="/js/menu.js"></script>
+</body>
+
+</html>

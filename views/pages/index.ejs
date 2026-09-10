@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>
+    <%= typeof pageTitle !== 'undefined'
+      ? pageTitle
+      : 'CakerMaker | Luxury Handcrafted Bakery' %>
+  </title>
+
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+
+<body>
+
+  <%- include('../partials/header') %>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero-section">
+    <div class="container hero-grid">
+
+      <div class="hero-text-col">
+
+        <div class="hero-badge">
+          <span>✨</span>
+          Handcrafted Fresh Daily &bull; 100% Pure Butter
+        </div>
+
+        <h1 class="hero-title">
+          Baked With Love, <span>Crafted For Joy</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Indulge in artisanal cakes made fresh to order. From rich Belgian
+          chocolate truffles to fragrant saffron rasmalai fusions, we turn
+          your sweet celebrations into unforgettable memories.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="/menu" class="btn-primary">
+            <span>🍰</span> Explore Menu
+          </a>
+
+          <a href="/gallery" class="btn-secondary">
+            <span>🖼️</span> Infinite Gallery
+          </a>
+        </div>
+
+        <div class="hero-trust-row">
+
+          <div class="trust-item">
+            <span class="trust-icon">⚡</span>
+
+            <div class="trust-text">
+              <strong>2-Hour Delivery</strong>
+              <span>Express fresh to your door</span>
+            </div>
+          </div>
+
+          <div class="trust-item">
+            <span class="trust-icon">🌱</span>
+
+            <div class="trust-text">
+              <strong>100% Eggless</strong>
+              <span>Dedicated veg options</span>
+            </div>
+          </div>
+
+          <div class="trust-item">
+            <span class="trust-icon">⭐</span>
+
+            <div class="trust-text">
+              <strong>4.9 / 5 Rating</strong>
+              <span>10,000+ Happy Foodies</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- HERO IMAGE -->
+      <div class="hero-image-wrapper">
+
+        <div class="hero-main-img-card">
+          <img
+            src="/images/cake1.jpg"
+            alt="Luxury Chocolate Truffle Cake"
+          />
+        </div>
+
+        <!-- Floating Card 1 -->
+        <div class="hero-floating-card floating-card-1">
+
+          <span class="floating-star">⭐</span>
+
+          <div class="floating-card-info">
+            <h4>"Best Truffle in Town!"</h4>
+            <p>Verified Buyer &bull; 2 mins ago</p>
+          </div>
+
+        </div>
+
+        <!-- Floating Card 2 -->
+        <div class="hero-floating-card floating-card-2">
+
+          <span class="floating-star">🎂</span>
+
+          <div class="floating-card-info">
+            <h4>Freshly Baked</h4>
+            <p>Order Placed: Rasmalai Fusion</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ================= CATEGORIES ================= -->
+  <section class="categories-section">
+
+    <div class="container">
+
+      <div class="section-header">
+
+        <span class="section-tag">
+          Curated Collections
+        </span>
+
+        <h2>
+          Explore By Flavor & Craving
+        </h2>
+
+        <p>
+          Choose from our wide variety of master baker creations suited for
+          every palate.
+        </p>
+
+      </div>
+
+
+      <div class="category-grid">
+
+        <a href="/menu?cat=Chocolate" class="category-card">
+          <div class="cat-icon-wrap">🍫</div>
+          <h3>Belgian Chocolate</h3>
+          <span>Truffles & Lava Cakes</span>
+        </a>
+
+        <a href="/menu?cat=Red%20Velvet" class="category-card">
+          <div class="cat-icon-wrap">❤️</div>
+          <h3>Royal Red Velvet</h3>
+          <span>Cream Cheese Frosting</span>
+        </a>
+
+        <a href="/menu?cat=Fusion%20%26%20Rasmalai" class="category-card">
+          <div class="cat-icon-wrap">👑</div>
+          <h3>Rasmalai Fusion</h3>
+          <span>Saffron & Pistachio</span>
+        </a>
+
+        <a href="/menu?cat=Berry%20%26%20Fruit" class="category-card">
+          <div class="cat-icon-wrap">🫐</div>
+          <h3>Berry & Fruits</h3>
+          <span>Wild Blueberries & Fresh</span>
+        </a>
+
+        <a href="/menu?cat=Vanilla" class="category-card">
+          <div class="cat-icon-wrap">🍦</div>
+          <h3>Madagascar Vanilla</h3>
+          <span>French Buttercream</span>
+        </a>
+
+        <a href="/menu?cat=Designer%20%26%20Custom" class="category-card">
+          <div class="cat-icon-wrap">🎂</div>
+          <h3>Wedding & Tiers</h3>
+          <span>Custom Celebration Art</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= BESTSELLERS ================= -->
+  <section class="products-section" style="background: #FFFFFF;">
+
+    <div class="container">
+
+      <div class="section-header">
+
+        <span class="section-tag">
+          Chef's Highlights
+        </span>
+
+        <h2>
+          Our Most-Loved Bestsellers 🍰
+        </h2>
+
+        <p>
+          These cakes have won the hearts of thousands of dessert lovers
+          across the city.
+        </p>
+
+      </div>
+
+
+      <div class="cake-grid" id="homeCakeGrid">
+
+        <% if (typeof featuredCakes !== 'undefined' && featuredCakes && featuredCakes.length > 0) { %>
+
+          <% featuredCakes.forEach(cake => { %>
+
+            <div
+              class="cake-card"
+              data-id="<%= cake._id %>"
+              data-name="<%= cake.name %>"
+              data-price="<%= cake.discountPrice || cake.price %>"
+              data-image="<%= cake.image %>"
+              data-category="<%= cake.category %>"
+              data-desc="<%= cake.description %>"
+              data-amazon="<%= cake.amazonUrl || '#' %>"
+            >
+
+              <!-- Cake Image -->
+              <div class="cake-image-container">
+
+                <img
+                  src="<%= cake.image %>"
+                  alt="<%= cake.name %>"
+                  loading="lazy"
+                />
+
+                <!-- Badges -->
+                <div class="cake-badges">
+
+                  <% if (cake.isEggless) { %>
+                    <span class="badge-veg">
+                      🌱 100% Eggless
+                    </span>
+                  <% } %>
+
+                  <% if (cake.isBestSeller) { %>
+                    <span class="badge-bestseller">
+                      🔥 Bestseller
+                    </span>
+                  <% } %>
+
+                </div>
+
+
+                <!-- Quick View -->
+                <button
+                  type="button"
+                  class="quick-view-overlay-btn"
+                  onclick="openCakeModalFromData(this.closest('.cake-card'))"
+                >
+                  <span>👁️</span>
+                  Quick View
+                </button>
+
+              </div>
+
+
+              <!-- Cake Body -->
+              <div class="cake-card-body">
+
+                <div class="cake-meta">
+
+                  <span class="cake-category">
+                    <%= cake.category %>
+                  </span>
+
+                  <span class="cake-rating">
+                    ⭐ <%= cake.rating || 5.0 %>
+                    (<%= cake.reviewsCount || 0 %>)
+                  </span>
+
+                </div>
+
+
+                <h3 class="cake-title">
+
+                  <a href="/product/<%= cake._id %>">
+                    <%= cake.name %>
+                  </a>
+
+                </h3>
+
+
+                <p class="cake-desc-snippet">
+                  <%= cake.description %>
+                </p>
+
+
+                <!-- Price -->
+                <div class="cake-price-row">
+
+                  <span class="current-price">
+                    ₹<%= cake.discountPrice || cake.price %>
+                  </span>
+
+
+                  <% if (cake.discountPrice && cake.discountPrice < cake.price) { %>
+
+                    <span class="original-price">
+                      ₹<%= cake.price %>
+                    </span>
+
+                    <span class="discount-tag">
+                      <%= Math.round(
+                        ((cake.price - cake.discountPrice) / cake.price) * 100
+                      ) %>% OFF
+                    </span>
+
+                  <% } %>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="cake-actions-row">
+
+                  <button
+                     type="button"
+                     class="btn-card-cart"
+                      data-id="<%= cake._id %>"
+                       data-name="<%= cake.name %>"
+                        data-price="<%= cake.discountPrice || cake.price %>"
+                          data-image="<%= cake.image %>"
+                          onclick="handleQuickAddToCart(this)"
+>
+  <span>🛒</span>
+  Add
+</button>
+
+                  <a
+                    href="<%= cake.amazonUrl || '#' %>"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn-card-amazon"
+                    title="Buy directly on Amazon"
+                  >
+                    <span>🛍️</span>
+                    Amazon
+                  </a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          <% }); %>
+
+
+        <% } else { %>
+
+          <p
+            style="
+              text-align: center;
+              grid-column: 1 / -1;
+              color: var(--text-muted);
+            "
+          >
+            Loading fresh bakery delights...
+          </p>
+
+        <% } %>
+
+      </div>
+
+
+      <!-- View All -->
+      <div style="text-align: center; margin-top: 40px;">
+
+        <a
+          href="/menu"
+          class="btn-primary"
+          style="padding: 14px 38px;"
+        >
+          <span>🍰</span>
+          View All 25+ Menu Cakes &rarr;
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= SWEET DEAL ================= -->
+  <section style="padding: 60px 0;">
+
+    <div class="container">
+
+      <div
+        style="
+          background: linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-light)
+          );
+          border-radius: var(--radius-lg);
+          padding: 50px 40px;
+          color: #FFFFFF;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 30px;
+          box-shadow: var(--shadow-lg);
+        "
+      >
+
+        <div style="max-width: 580px;">
+
+          <span
+            style="
+              background: #FFE8D6;
+              color: var(--primary);
+              padding: 6px 14px;
+              border-radius: var(--radius-full);
+              font-weight: 800;
+              font-size: 0.82rem;
+              display: inline-block;
+              margin-bottom: 14px;
+            "
+          >
+            SPECIAL WELCOME DISCOUNT
+          </span>
+
+
+          <h2
+            style="
+              color: #FFFFFF;
+              font-size: 2.3rem;
+              margin-bottom: 12px;
+            "
+          >
+            Get 20% OFF Your First Celebration Cake!
+          </h2>
+
+
+          <p
+            style="
+              color: #EEDFD5;
+              font-size: 1.05rem;
+              line-height: 1.6;
+            "
+          >
+            Apply coupon code
+
+            <strong
+              style="
+                color: var(--accent-light);
+                font-size: 1.2rem;
+                background: rgba(255,255,255,0.15);
+                padding: 2px 8px;
+                border-radius: 4px;
+              "
+            >
+              SWEET20
+            </strong>
+
+            at checkout on any order above ₹499.
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <a
+            href="/menu"
+            class="btn-primary"
+            style="
+              background: var(--coral);
+              box-shadow: 0 4px 15px rgba(224,83,60,0.4);
+            "
+          >
+            Order Now & Save 20%
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= CUSTOMER REVIEWS ================= -->
+  <section
+    class="reviews-section"
+    style="background: #FFFFFF;"
+  >
+
+    <div class="container">
+
+      <div class="section-header">
+
+        <span class="section-tag">
+          Sweet Words
+        </span>
+
+        <h2>
+          What Our Cake Lovers Say 💬
+        </h2>
+
+        <p>
+          Real experiences from our valued customers.
+        </p>
+
+      </div>
+
+
+      <div class="reviews-carousel-wrapper">
+
+        <div class="review-slide">
+
+          <div class="review-stars">
+            ⭐⭐⭐⭐⭐
+          </div>
+
+
+          <p class="review-quote">
+            "The Classic Chocolate Truffle for my birthday was unbelievably
+            fresh and moist. Arrived within 2 hours of ordering and became
+            the star of the party!"
+          </p>
+
+
+          <div class="reviewer-meta">
+
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop"
+              alt="Rahul Banerjee"
+              class="reviewer-avatar"
+            />
+
+
+            <div>
+
+              <strong class="reviewer-name">
+                Rahul Banerjee
+              </strong>
+
+              <span class="reviewer-tag">
+                Verified Buyer &bull; Chocolate Truffle
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= FOOTER ================= -->
+  <%- include('../partials/footer') %>
+
+</body>
+
+</html>

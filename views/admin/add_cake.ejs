@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add New Cake | CakerMaker Admin</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>🍰 CakerAdmin</h2>
+      <ul>
+        <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+        <li><a href="/admin/orders">📦 Customer Orders</a></li>
+        <li><a href="/admin/add-cake" class="active">➕ Add New Cake</a></li>
+        <li><a href="/admin/manage-cake">🍰 Manage Cakes</a></li>
+        <li><a href="/" target="_blank">🌐 View Live Shop</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <h1>Add New Cake to Bakery</h1>
+        <a href="/admin/manage-cake" class="btn-action">&larr; Back to Cakes</a>
+      </header>
+
+      <section class="admin-card-box">
+        <h2>Cake Information & Details</h2>
+        <form action="/admin/add-cake" method="POST" class="admin-form-grid">
+          <div class="admin-form-group">
+            <label>Cake Name *</label>
+            <input type="text" name="name" placeholder="e.g. Belgian Dark Truffle Fantasy" required />
+          </div>
+
+          <div class="admin-form-group">
+            <label>Category *</label>
+            <select name="category" required>
+              <option value="Chocolate">Chocolate</option>
+              <option value="Red Velvet">Red Velvet</option>
+              <option value="Fusion & Rasmalai">Fusion & Rasmalai</option>
+              <option value="Berry & Fruit">Berry & Fruit</option>
+              <option value="Vanilla">Vanilla</option>
+              <option value="Designer & Custom">Designer & Custom</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label>Regular Price (₹) *</label>
+            <input type="number" name="price" placeholder="550" required min="1" />
+          </div>
+
+          <div class="admin-form-group">
+            <label>Discount Price (₹, Optional)</label>
+            <input type="number" name="discountPrice" placeholder="499" min="1" />
+          </div>
+
+          <div class="admin-form-group">
+            <label>Select Cake Image (or enter custom path) *</label>
+            <select name="image" required>
+              <option value="/images/cake1.jpg">cake1.jpg (Classic Truffle)</option>
+              <option value="/images/Cake2.jpg">Cake2.jpg (Floral Wedding Tier)</option>
+              <option value="/images/Cake3.jpg">Cake3.jpg (Rose Gold Tier)</option>
+              <option value="/images/cake4.jpeg">cake4.jpeg (Special Baker Cake)</option>
+              <option value="/images/cake5.jpeg">cake5.jpeg (Celebration Cake)</option>
+              <option value="/images/Blueberry1.jpg">Blueberry1.jpg (Wild Blueberry)</option>
+              <option value="/images/Blueberry2.jpg">Blueberry2.jpg (Blueberry Tier)</option>
+              <option value="/images/Blueberry3.jpg">Blueberry3.jpg (Cheesecake)</option>
+              <option value="/images/Blueberry4.jpg">Blueberry4.jpg (Swiss Buttercream)</option>
+              <option value="/images/Chocolate1.jpg">Chocolate1.jpg (Silk Truffle)</option>
+              <option value="/images/chocolate2.jpg">chocolate2.jpg (Dark Mousse)</option>
+              <option value="/images/Chocolate3.jpg">Chocolate3.jpg (Triple Layer)</option>
+              <option value="/images/Chocolate4.jpg">Chocolate4.jpg (Choco Drip)</option>
+              <option value="/images/Hazelnut_Chocolate.jpg">Hazelnut_Chocolate.jpg</option>
+              <option value="/images/Heart_Felt_Chocolate.jpg">Heart_Felt_Chocolate.jpg</option>
+              <option value="/images/Heavenly_Eggless_Cake.jpg">Heavenly_Eggless_Cake.jpg</option>
+              <option value="/images/High_attitude_chocolate.jpg">High_attitude_chocolate.jpg</option>
+              <option value="/images/Rasmalai.jpg">Rasmalai.jpg (Royal Fusion)</option>
+              <option value="/images/Rasmalai2.jpg">Rasmalai2.jpg (Kesar Pista)</option>
+              <option value="/images/Rasmalai3.jpg">Rasmalai3.jpg (Shahi Celebration)</option>
+              <option value="/images/Rasmalai4.jpg">Rasmalai4.jpg (Almond Rabdi)</option>
+              <option value="/images/Rasmalai5.jpg">Rasmalai5.jpg (Rose Petal)</option>
+              <option value="/images/Red_Velvet.jpg">Red_Velvet.jpg (Cream Cheese)</option>
+              <option value="/images/Red_velvet2.jpg">Red_velvet2.jpg (White Truffle)</option>
+              <option value="/images/Red_velvet3.jpg">Red_velvet3.jpg (Heart Shape)</option>
+              <option value="/images/StrawberryChocolateCake.jpg">StrawberryChocolateCake.jpg</option>
+              <option value="/images/Vanila.jpg">Vanila.jpg (Madagascar Bean)</option>
+              <option value="/images/Vanila2.jpg">Vanila2.jpg (French Buttercream)</option>
+              <option value="/images/Vanila3.jpg">Vanila3.jpg (Caramel Ripple)</option>
+              <option value="/images/Vanilla1.jpg">Vanilla1.jpg (Confetti)</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label>Amazon Product / Search Link (Optional)</label>
+            <input type="url" name="amazonUrl" placeholder="https://www.amazon.in/s?k=cake" />
+          </div>
+
+          <div class="admin-form-group full-width">
+            <label>Cake Description</label>
+            <textarea name="description" rows="3" placeholder="Handcrafted with pure butter, rich Belgian chocolate ganache, and organic ingredients..."></textarea>
+          </div>
+
+          <div class="admin-form-group full-width">
+            <label>Tags (Comma separated)</label>
+            <input type="text" name="tags" placeholder="Eggless, Bestseller, Dark Chocolate, Birthday" />
+          </div>
+
+          <div class="checkbox-row">
+            <label><input type="checkbox" name="isEggless" checked /> 100% Eggless Option</label>
+            <label><input type="checkbox" name="isFeatured" checked /> Feature on Homepage</label>
+            <label><input type="checkbox" name="isBestSeller" /> Mark as Bestseller</label>
+          </div>
+
+          <div class="admin-form-group full-width" style="margin-top: 10px;">
+            <button type="submit" class="btn-admin-submit">Save & Publish Cake to Shop 🎂</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

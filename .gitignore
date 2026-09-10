@@ -1,0 +1,19 @@
+# Node Modules
+node_modules/
+
+# Environment Variables
+.env
+.env.local
+
+# Public Images & Media
+/public/images/
+public/Videos/
+
+# Log Files
+*.log
+npm-debug.log*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/

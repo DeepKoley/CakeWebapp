@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Admin Dashboard | CakerMaker' %></title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>🍰 CakerAdmin</h2>
+      <ul>
+        <li><a href="/admin/dashboard" class="active">📊 Dashboard</a></li>
+        <li><a href="/admin/orders">📦 Customer Orders</a></li>
+        <li><a href="/admin/add-cake">➕ Add New Cake</a></li>
+        <li><a href="/admin/manage-cake">🍰 Manage Cakes</a></li>
+        <li><a href="/" target="_blank">🌐 View Live Shop</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <h1>Dashboard Overview</h1>
+        <div class="admin-profile">
+          <span>Welcome, <strong>Master Baker Admin</strong> 👋</span>
+        </div>
+      </header>
+
+      <!-- Stats Grid (from MongoDB) -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Sales</h3>
+          <p>₹<%= typeof totalSales !== 'undefined' ? totalSales.toLocaleString() : '15,400' %></p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Orders</h3>
+          <p><%= typeof totalOrders !== 'undefined' ? totalOrders : 1 %></p>
+        </div>
+        <div class="stat-card">
+          <h3>Active / Pending</h3>
+          <p style="color: #D97706;"><%= typeof pendingOrdersCount !== 'undefined' ? pendingOrdersCount : 1 %></p>
+        </div>
+        <div class="stat-card">
+          <h3>Cakes in Database</h3>
+          <p style="color: #16A34A;"><%= typeof totalCakes !== 'undefined' ? totalCakes : 26 %></p>
+        </div>
+      </section>
+
+      <!-- Recent Customer Orders (from MongoDB) -->
+      <section class="recent-orders">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2>Recent Orders from Customers</h2>
+          <a href="/admin/orders" class="btn-action">View All Orders &rarr;</a>
+        </div>
+
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th>Items</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (typeof recentOrders !== 'undefined' && recentOrders.length > 0) { %>
+              <% recentOrders.forEach(order => { %>
+                <tr>
+                  <td><strong>#<%= order.orderId %></strong></td>
+                  <td><%= order.customer ? order.customer.name : 'Customer' %></td>
+                  <td><%= order.customer ? order.customer.phone : '-' %></td>
+                  <td><%= order.items ? order.items.map(i => i.name).join(', ') : 'Cake' %></td>
+                  <td><strong>₹<%= order.totalAmount %></strong></td>
+                  <td>
+                    <span class="badge <%= order.paymentStatus === 'Paid' ? 'delivered' : 'pending' %>">
+                      <%= order.paymentStatus %> (<%= order.paymentMethod %>)
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge <%= order.orderStatus === 'Delivered' ? 'delivered' : (order.orderStatus === 'Baking' ? 'baking' : 'pending') %>">
+                      <%= order.orderStatus %>
+                    </span>
+                  </td>
+                  <td>
+                    <a href="/admin/orders" class="btn-view">Manage</a>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--admin-muted); padding: 30px;">
+                  No orders placed yet. As customers checkout on the website, orders will appear here in real-time!
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

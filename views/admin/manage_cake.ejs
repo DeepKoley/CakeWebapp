@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Cakes | CakerMaker Admin</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>🍰 CakerAdmin</h2>
+      <ul>
+        <li><a href="/admin/dashboard">📊 Dashboard</a></li>
+        <li><a href="/admin/orders">📦 Customer Orders</a></li>
+        <li><a href="/admin/add-cake">➕ Add New Cake</a></li>
+        <li><a href="/admin/manage-cake" class="active">🍰 Manage Cakes</a></li>
+        <li><a href="/" target="_blank">🌐 View Live Shop</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <h1>Manage All Bakery Cakes</h1>
+        <a href="/admin/add-cake" class="btn-admin-submit" style="text-decoration: none; padding: 8px 18px; font-size: 0.9rem;">
+          + Add New Cake
+        </a>
+      </header>
+
+      <section class="admin-card-box">
+        <h2>Active Cakes in Catalog (<%= cakes ? cakes.length : 0 %>)</h2>
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Cake Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Rating</th>
+              <th>Badges</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (cakes && cakes.length > 0) { %>
+              <% cakes.forEach(cake => { %>
+                <tr>
+                  <td>
+                    <img src="<%= cake.image %>" alt="<%= cake.name %>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" />
+                  </td>
+                  <td>
+                    <strong><%= cake.name %></strong>
+                  </td>
+                  <td><%= cake.category %></td>
+                  <td>₹<%= cake.price %></td>
+                  <td><%= cake.discountPrice ? '₹' + cake.discountPrice : '-' %></td>
+                  <td>⭐ <%= cake.rating %></td>
+                  <td>
+                    <% if (cake.isEggless) { %><span class="badge delivered">Eggless</span><% } %>
+                    <% if (cake.isBestSeller) { %><span class="badge pending">Bestseller</span><% } %>
+                  </td>
+                  <td>
+                    <div style="display: flex; gap: 8px;">
+                      <a href="/product/<%= cake._id %>" target="_blank" class="btn-view">View</a>
+                      <form action="/admin/delete-cake/<%= cake._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete <%= cake.name %>?');">
+                        <button type="submit" class="btn-delete">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--admin-muted); padding: 30px;">
+                  No cakes in database. <a href="/admin/add-cake">Add your first cake now</a>.
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

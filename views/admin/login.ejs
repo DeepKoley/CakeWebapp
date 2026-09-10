@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | CakerMaker</title>
+  <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    .login-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 50%, #FFF4EB 0%, #EEDFD5 100%);
+      padding: 20px;
+    }
+    .login-card {
+      background: #FFFFFF;
+      border: 1px solid var(--admin-border);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(70, 34, 21, 0.1);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div style="font-size: 3rem; margin-bottom: 12px;">🍰</div>
+      <h1 style="font-size: 1.8rem; color: var(--admin-primary); margin-bottom: 8px;">Bakery Admin Portal</h1>
+      <p style="color: var(--admin-muted); font-size: 0.9rem; margin-bottom: 28px;">
+        Sign in to manage cake catalog, customer orders, and shop analytics.
+      </p>
+
+      <form action="/admin/login" method="POST" style="display: flex; flex-direction: column; gap: 16px; text-align: left;">
+        <div class="admin-form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" value="admin@cakemaker.com" required />
+        </div>
+
+        <div class="admin-form-group">
+          <label>Password</label>
+          <input type="password" name="password" value="admin123" required />
+        </div>
+
+        <button type="submit" class="btn-admin-submit" style="width: 100%; margin-top: 10px; padding: 14px;">
+          Sign In to Dashboard &rarr;
+        </button>
+      </form>
+
+      <div style="margin-top: 24px; font-size: 0.85rem; color: var(--admin-muted);">
+        <a href="/" style="color: var(--admin-accent); font-weight: 700;">&larr; Back to CakerMaker Store</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

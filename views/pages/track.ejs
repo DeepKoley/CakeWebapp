@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Live Delivery Tracker & Helpline | CakerMaker' %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/track.css" />
+</head>
+
+<body>
+  <%- include('../partials/header') %>
+
+  <!-- Top Hero Bar -->
+  <header class="track-page-header">
+    <div class="container">
+      <div class="track-header-content">
+        <div class="track-header-title">
+          <span class="section-tag" style="background: rgba(255,255,255,0.15); color: #FCD34D;">⚡ Real-Time GPS Tracking</span>
+          <h1>Live Cake Delivery Tracker 🚚</h1>
+          <p>Watch your handcrafted cake travel safely from our bakery oven straight to your doorstep.</p>
+        </div>
+
+        <!-- Search Bar for Any Order ID -->
+        <form id="orderSearchForm" class="order-search-box">
+          <input type="text" id="orderSearchInput" class="order-search-input"
+            placeholder="Enter Order ID (e.g. CK-10928)" value="<%= order ? order.orderId : '' %>" />
+          <button type="submit" class="order-search-btn">Track Order</button>
+        </form>
+      </div>
+
+      <!-- Quick Demo Order Chips -->
+      <div style="margin-top: 14px; font-size: 0.82rem; color: #F5D5C6; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <span>Popular Demo Orders:</span>
+        <button type="button" onclick="quickTrackOrder('CK-882194')" style="background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); color: #FFF; border-radius: 20px; padding: 2px 10px; cursor: pointer; font-size: 0.78rem;">
+          #CK-882194 (In Transit)
+        </button>
+        <button type="button" onclick="quickTrackOrder('CK-10928')" style="background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); color: #FFF; border-radius: 20px; padding: 2px 10px; cursor: pointer; font-size: 0.78rem;">
+          #CK-10928 (Express)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="tracking-layout-grid">
+      <!-- LEFT COLUMN: Live Map Radar & Delivery Agent Details -->
+      <div class="tracking-main-col">
+        <!-- 1. Interactive Live Map Radar -->
+        <div class="live-map-card">
+          <div class="map-radar-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.2rem;">🛰️</span>
+              <div>
+                <strong style="font-size: 0.95rem;">Live Delivery Agent Radar</strong>
+                <div style="font-size: 0.76rem; color: #A89286;">Telemetry stream active • GPS precision &plusmn;3m</div>
+              </div>
+            </div>
+            <div class="radar-badge">
+              <span class="pulse-dot"></span> In Transit
+            </div>
+          </div>
+
+          <!-- Visual Map Canvas -->
+          <div class="map-canvas-container" id="mapCanvas">
+            <!-- Road Route SVG -->
+            <svg class="map-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <!-- Background Road -->
+              <path class="route-road" d="M 16,25 C 40,20 55,80 84,75" />
+              <!-- Animated Glowing Active Route -->
+              <path class="route-active-line" d="M 16,25 C 40,20 55,80 84,75" />
+            </svg>
+
+            <!-- 1. Bakery Station Pin -->
+            <div class="map-pin pin-bakery">
+              <div class="pin-icon">🍰</div>
+              <span class="pin-label">CakerMaker Bakery</span>
+            </div>
+
+            <!-- 2. Real-Time Moving Agent Pin -->
+            <div class="map-pin pin-agent" id="liveAgentPin">
+              <div class="pin-pulse-ring"></div>
+              <div class="pin-icon">🚚</div>
+              <span class="pin-label" id="agentPinName">
+                <%= (order.deliveryAgent && order.deliveryAgent.name) ? order.deliveryAgent.name : 'Vikram (Driver)' %>
+              </span>
+            </div>
+
+            <!-- 3. Destination Pin -->
+            <div class="map-pin pin-destination">
+              <div class="pin-icon">📍</div>
+              <span class="pin-label">Your Doorstep</span>
+            </div>
+          </div>
+
+          <!-- Map Telemetry HUD -->
+          <div class="map-telemetry-hud">
+            <div class="hud-item">
+              <div class="hud-label">Estimated Time</div>
+              <div class="hud-value highlight" id="hudEta">18m 20s</div>
+            </div>
+            <div class="hud-item">
+              <div class="hud-label">Distance Left</div>
+              <div class="hud-value" id="hudDistance">1.4 km</div>
+            </div>
+            <div class="hud-item">
+              <div class="hud-label">Vehicle Speed</div>
+              <div class="hud-value" id="hudSpeed">28 km/h</div>
+            </div>
+            <div class="hud-item">
+              <div class="hud-label">Cake Box Temp</div>
+              <div class="hud-value temp" id="hudTemp">4.2°C</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Assigned Delivery Agent Card -->
+        <div class="delivery-agent-card">
+          <div class="agent-profile-header">
+            <div class="agent-avatar-wrap">
+              <img src="<%= (order.deliveryAgent && order.deliveryAgent.avatar) ? order.deliveryAgent.avatar : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop' %>"
+                alt="Delivery Agent" class="agent-avatar" />
+              <div class="agent-badge-shield" title="Verified Safe Delivery Partner">✓</div>
+            </div>
+
+            <div class="agent-info">
+              <h3><%= (order.deliveryAgent && order.deliveryAgent.name) ? order.deliveryAgent.name : 'Vikram Singh' %></h3>
+              <div class="agent-rating-row">
+                <span class="agent-stars">⭐⭐⭐⭐⭐ <%= (order.deliveryAgent && order.deliveryAgent.rating) ? order.deliveryAgent.rating : '4.95' %></span>
+                <span>&bull;</span>
+                <span><%= (order.deliveryAgent && order.deliveryAgent.totalDeliveries) ? order.deliveryAgent.totalDeliveries : '1,420' %> Safe Deliveries</span>
+              </div>
+              <div style="font-size: 0.8rem; color: #16A34A; margin-top: 4px; font-weight: 600;">
+                🌱 Temperature-Controlled Thermal Cake Van Driver
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle and Status info -->
+          <div class="agent-vehicle-box">
+            <div>
+              <div class="vehicle-label">Vehicle Details</div>
+              <div class="vehicle-number"><%= (order.deliveryAgent && order.deliveryAgent.vehicle) ? order.deliveryAgent.vehicle : 'WB-02-AK-4821 (Eco Chilled Van)' %></div>
+            </div>
+            <div style="text-align: right;">
+              <div class="vehicle-label">Current Landmark</div>
+              <div style="font-weight: 700; color: var(--primary); font-size: 0.85rem;" id="agentCurrentLocationText">
+                <%= (order.deliveryAgent && order.deliveryAgent.currentLocationName) ? order.deliveryAgent.currentLocationName : 'Park Street Flyover (1.4 km away)' %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direct Call and WhatsApp Agent Buttons -->
+          <div class="agent-actions-row">
+            <a href="tel:<%= (order.deliveryAgent && order.deliveryAgent.phone) ? order.deliveryAgent.phone : '+919876543210' %>" class="btn-agent-call">
+              <span>📞</span> Call Agent
+            </a>
+            <a href="https://wa.me/919876543210?text=Hi%20<%= encodeURIComponent((order.deliveryAgent && order.deliveryAgent.name) ? order.deliveryAgent.name : 'Vikram') %>,%20regarding%20my%20cake%20delivery%20#<%= order.orderId %>"
+              target="_blank" rel="noopener noreferrer" class="btn-agent-whatsapp">
+              <span>💬</span> WhatsApp Agent
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. Customer Service Helpline Details Card -->
+        <div class="helpline-card">
+          <div class="helpline-card-header">
+            <div class="helpline-icon-badge">📞</div>
+            <div>
+              <h3>24/7 Customer Service Helpline</h3>
+              <p>Need to modify your delivery gate, update phone number, or check order details? Our Cake Concierge is right here!</p>
+            </div>
+          </div>
+
+          <div class="helpline-grid">
+            <!-- Channel 1: Toll Free Phone -->
+            <a href="tel:1800225362" class="helpline-channel-box">
+              <span class="channel-icon">☎️</span>
+              <div>
+                <div class="channel-title">Toll-Free Customer Care</div>
+                <div class="channel-number">1800-CAKE-CARE (1800-225-362)</div>
+                <div class="channel-timing">Active 8:00 AM – 11:00 PM Daily</div>
+              </div>
+            </a>
+
+            <!-- Channel 2: WhatsApp Live Support Desk -->
+            <a href="https://wa.me/919876543210?text=Hi%20CakerMaker%20Helpline,%20I%20need%20assistance%20with%20my%20order%20<%= order.orderId %>"
+              target="_blank" rel="noopener noreferrer" class="helpline-channel-box">
+              <span class="channel-icon">💬</span>
+              <div>
+                <div class="channel-title">WhatsApp Live Support</div>
+                <div class="channel-number">+91 98765 43210</div>
+                <div class="channel-timing">Instant replies in &lt; 2 minutes</div>
+              </div>
+            </a>
+
+            <!-- Channel 3: Email Support -->
+            <a href="mailto:care@cakemaker.com?subject=Inquiry regarding Order <%= order.orderId %>" class="helpline-channel-box">
+              <span class="channel-icon">✉️</span>
+              <div>
+                <div class="channel-title">Priority Email Desk</div>
+                <div class="channel-number">care@cakemaker.com</div>
+                <div class="channel-timing">Direct response within 15 mins</div>
+              </div>
+            </a>
+
+            <!-- Channel 4: Bakery Flagship -->
+            <div class="helpline-channel-box">
+              <span class="channel-icon">🏢</span>
+              <div>
+                <div class="channel-title">Flagship Kitchen & Store</div>
+                <div class="channel-number">12/B Park Street, Kolkata</div>
+                <div class="channel-timing">Open 365 Days a Year</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Order Timeline & Items Summary -->
+      <div class="tracking-sidebar-col">
+        <!-- 1. Order Progress Stepper -->
+        <div class="track-card">
+          <div class="track-card-title">
+            <span>Order Status: <strong><%= order.orderStatus %></strong></span>
+            <span style="font-size: 0.85rem; color: var(--coral);">#<%= order.orderId %></span>
+          </div>
+
+          <div class="progress-stepper">
+            <!-- Step 1 -->
+            <div class="step-item completed">
+              <div class="step-icon-wrap">✓</div>
+              <div class="step-content">
+                <h4>Order Placed & Confirmed</h4>
+                <p>Payment received via <%= order.paymentMethod %> (<%= order.paymentStatus %>)</p>
+                <div class="step-time">Completed</div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-item completed">
+              <div class="step-icon-wrap">✓</div>
+              <div class="step-content">
+                <h4>Batter Whisked & Baked</h4>
+                <p>Pure Belgian cocoa & farm dairy butter freshly baked in oven</p>
+                <div class="step-time">Completed</div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-item completed">
+              <div class="step-icon-wrap">✓</div>
+              <div class="step-content">
+                <h4>Hand-Frosted & Quality Checked</h4>
+                <p>Custom message piped and secured in chilled thermal container</p>
+                <div class="step-time">Completed</div>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-item active">
+              <div class="step-icon-wrap">🚚</div>
+              <div class="step-content">
+                <h4 style="color: var(--coral);">Out for Delivery</h4>
+                <p>Dispatched with our certified delivery hero <%= (order.deliveryAgent && order.deliveryAgent.name) ? order.deliveryAgent.name : 'Vikram Singh' %></p>
+                <div class="step-time" style="color: var(--coral); font-weight: 800;">In Progress (ETA ~18 mins)</div>
+              </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-item">
+              <div class="step-icon-wrap">🏠</div>
+              <div class="step-content">
+                <h4>Delivered at Doorstep</h4>
+                <p>Unbox, celebrate, and enjoy your sweet handcrafted celebration!</p>
+                <div class="step-time" style="color: var(--text-light);">Pending arrival</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Delivery Address & Customer Details -->
+        <div class="track-card">
+          <div class="track-card-title">
+            <span>📍 Delivery Destination</span>
+          </div>
+          <div style="font-size: 0.92rem; line-height: 1.6;">
+            <strong><%= order.customer ? order.customer.name : 'Deepak Kumar' %></strong><br />
+            📞 <%= order.customer ? order.customer.phone : '+91 98765 43210' %><br />
+            🏠 <%= order.customer ? order.customer.address : 'Flat 4B, Silver Oak Residency, Park Street' %><br />
+            <%= order.customer ? order.customer.city : 'Kolkata' %>, <%= order.customer ? order.customer.pincode : '700016' %><br />
+            <% if (order.customer && order.customer.cakeMessage) { %>
+              <div style="margin-top: 10px; background: var(--coral-soft); color: var(--coral); padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
+                📝 Message on Cake: "<%= order.customer.cakeMessage %>"
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- 3. Ordered Cakes Summary -->
+        <div class="track-card">
+          <div class="track-card-title">
+            <span>🍰 Items in Order (<%= order.items ? order.items.length : 0 %>)</span>
+          </div>
+
+          <div class="order-overview-items">
+            <% if (order.items && order.items.length > 0) { %>
+              <% order.items.forEach(item => { %>
+                <div class="overview-item-row">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="<%= item.image || '/images/cake1.jpg' %>" alt="<%= item.name %>"
+                      style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color);" />
+                    <div>
+                      <strong style="font-size: 0.88rem;"><%= item.name %></strong>
+                      <div style="font-size: 0.75rem; color: var(--text-muted);">Qty: <%= item.quantity %> &bull; <%= item.weight || '1 kg' %></div>
+                    </div>
+                  </div>
+                  <strong style="color: var(--primary);">₹<%= item.price * item.quantity %></strong>
+                </div>
+              <% }); %>
+            <% } %>
+
+            <div class="overview-total-box">
+              <span>Total Paid Amount:</span>
+              <span style="color: var(--coral); font-size: 1.2rem;">₹<%= order.totalAmount %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script src="/js/track.js"></script>
+</body>
+
+</html>

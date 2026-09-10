@@ -1,0 +1,135 @@
+<!-- Top Announcement & Customer Service Helpline Bar -->
+<div class="top-helpline-bar" style="background: #27120A; color: #F5D5C6; font-size: 0.82rem; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.08);">
+  <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <div>
+      <span>⚡ 2-Hour Express Delivery</span> &bull; <span>🌱 100% Pure Vegetarian Stations</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 18px;">
+      <a href="/track" style="color: #FCD34D; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+        <span>🚚</span> Live Order Tracker
+      </a>
+      <a href="tel:1800225362" style="color: #FFFFFF; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+        <span>📞</span> Helpline: 1800-225-362
+      </a>
+      <a href="https://wa.me/919876543210?text=Hi%20CakerMaker%20Helpline" target="_blank" rel="noopener noreferrer" style="color: #4ADE80; font-weight: 700; display: flex; align-items: center; gap: 4px;">
+        <span>💬</span> WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<header class="main-header">
+  <div class="container nav-container">
+    <a href="/" class="logo-card">
+      <img src="/images/cake1.jpg" alt="CakerMaker Logo" />
+      <div class="logo-text">
+        <h1>Caker<span>Maker</span></h1>
+        <span class="logo-tagline">Artisan Bakery</span>
+      </div>
+    </a>
+
+    <nav class="nav-menu">
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/" class="<%= (typeof currentPath !== 'undefined' && currentPath === '/') ? 'active' : '' %>">Home</a></li>
+        <li><a href="/menu" class="<%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/menu')) ? 'active' : '' %>">Menu</a></li>
+        <li><a href="/gallery" class="<%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/gallery')) ? 'active' : '' %>">Gallery</a></li>
+        <li><a href="/track" class="<%= (typeof currentPath !== 'undefined' && currentPath.startsWith('/track')) ? 'active' : '' %>">Track Order 🚚</a></li>
+        <li><a href="/about" class="<%= (typeof currentPath !== 'undefined' && (currentPath.startsWith('/about') || currentPath.startsWith('/about_us'))) ? 'active' : '' %>">About Us</a></li>
+      </ul>
+    </nav>
+
+    <!-- Cart Badge and Actions -->
+    <div class="nav-actions">
+      <a href="tel:1800225362" class="helpline-nav-btn" style="background: rgba(224, 83, 60, 0.1); color: var(--coral); border: 1px solid rgba(224, 83, 60, 0.25); padding: 8px 14px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px;" title="Call 24/7 Customer Care Helpline">
+        <span>📞</span> Helpline
+      </a>
+
+      <a href="/cart" class="cart-icon-btn" title="View Cart">
+        <span>🛒</span> Cart
+        <span id="cart-count">0</span>
+      </a>
+
+      <a href="/admin/dashboard" class="admin-link-btn" title="Admin Portal">
+        ⚙️ Admin
+      </a>
+
+      <!-- Mobile Hamburger Toggle -->
+      <button id="menu-toggle" class="hamburger" aria-label="Toggle Navigation" onclick="toggleMobileMenu()">
+        ☰
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Global Toast Container -->
+<div class="cake-toast-container" id="toastContainer"></div>
+
+<!-- Global Cake Customization Popup Modal -->
+<div class="modal-backdrop" id="cakeModalBackdrop" onclick="handleBackdropClick(event)">
+  <div class="cake-popup-box" id="cakePopupBox">
+    <button class="modal-close-btn" onclick="closeCakeModal()" aria-label="Close modal">&times;</button>
+    <div class="popup-img-wrap">
+      <img id="modalCakeImg" src="/images/cake1.jpg" alt="Cake Preview" />
+    </div>
+    <div class="popup-details">
+      <span class="popup-category" id="modalCakeCategory">Chocolate</span>
+      <h2 class="popup-title" id="modalCakeTitle">Cake Name</h2>
+      <div class="popup-rating" id="modalCakeRating">⭐⭐⭐⭐⭐ (4.9 / 5)</div>
+      <p class="popup-desc" id="modalCakeDesc">Artisan handcrafted cake made fresh with pure ingredients.</p>
+
+      <div class="popup-price-box">
+        <span class="popup-price" id="modalCakePrice">₹550</span>
+        <span class="badge-veg">🌱 100% Eggless Option</span>
+      </div>
+
+      <div class="popup-option-label">Select Weight:</div>
+      <div class="weight-selector" id="weightSelector">
+        <button type="button" class="weight-chip" data-multiplier="0.8" data-weight="0.5 kg" onclick="selectWeight(this)">0.5 kg</button>
+        <button type="button" class="weight-chip active" data-multiplier="1.0" data-weight="1 kg" onclick="selectWeight(this)">1 kg</button>
+        <button type="button" class="weight-chip" data-multiplier="1.8" data-weight="2 kg" onclick="selectWeight(this)">2 kg</button>
+      </div>
+
+      <div class="popup-option-label">Message on Cake (Optional):</div>
+      <input type="text" class="cake-msg-input" id="modalCakeMsg" placeholder="e.g. Happy 25th Birthday Amit! 🎉" maxlength="40" />
+
+      <div class="popup-qty-row">
+        <div class="popup-option-label" style="margin-bottom: 0;">Quantity:</div>
+        <div class="qty-control">
+          <button type="button" class="qty-btn" onclick="adjustModalQty(-1)">−</button>
+          <span class="qty-number" id="modalQtyNum">1</span>
+          <button type="button" class="qty-btn" onclick="adjustModalQty(1)">+</button>
+        </div>
+      </div>
+
+      <div class="popup-actions-grid">
+        <button type="button" class="btn-popup-add" onclick="addModalCakeToCart()">
+          <span>🛒</span> Add to Cart
+        </button>
+        <a id="modalAmazonLink" href="https://www.amazon.in/s?k=cake" target="_blank" rel="noopener noreferrer" class="btn-popup-amazon">
+          <span>🛍️</span> Buy on Amazon
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleMobileMenu() {
+    const nav = document.getElementById('navLinks');
+    if (nav) {
+      if (nav.style.display === 'flex') {
+        nav.style.display = 'none';
+      } else {
+        nav.style.display = 'flex';
+        nav.style.flexDirection = 'column';
+        nav.style.position = 'absolute';
+        nav.style.top = '80px';
+        nav.style.left = '0';
+        nav.style.width = '100%';
+        nav.style.background = '#FFFFFF';
+        nav.style.padding = '20px';
+        nav.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+      }
+    }
+  }
+</script>
